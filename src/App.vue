@@ -15,6 +15,7 @@ function loadVideo(i: any) {
         'startSeconds': i['start'],
         'endSeconds': i['end'],
       });
+      player.playVideo();
     };
   }
   playing.value = i;
@@ -31,12 +32,12 @@ onMounted(() => {
     events: {
       'onReady': () => { 
         if (window.location.hash && /^#[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(window.location.hash)) {
-          fetch('/' + window.location.hash.substring(1) + '.json')
+          fetch('/data/' + window.location.hash.substring(1) + '.json')
             .then(d => d.json())
             .then(i => loadVideo(i));
         }
         else { 
-          fetch('/data.json')
+          fetch('/data/data.json')
             .then(d => d.json())
             .then(i => loadVideo(i[0]));
         }

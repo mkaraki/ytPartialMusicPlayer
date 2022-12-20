@@ -11,7 +11,7 @@ function sendNewVideoInfo(i: any) {
 };
 
 onMounted(() => {
-  fetch('/data.json')
+  fetch('/data/data.json')
     .then(d => d.json())
     .then(i => songs.value = i);
 });
