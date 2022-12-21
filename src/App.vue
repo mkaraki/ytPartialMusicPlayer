@@ -62,10 +62,9 @@ onMounted(() => {
     <nav>
     </nav>
     <div class="container-xl clearfix">
-      <div class="col-6 float-left">
-        <div class="d-flex flex-column flex-md-row flex-items-center flex-md-items-center ml-4 mr-4"
-          :style="{ height: '100vh' }">
-          <div :style="{width: '100%'}">
+      <div class="col-12 col-lg-6 float-left">
+        <div class="d-flex flex-column flex-md-row flex-items-center flex-md-items-center ml-4 mr-4 playing-info-holder">
+          <div>
             <div id="player"></div>
             <div class="p-1">
               <h4>{{ playing['title'] }}</h4>
@@ -74,7 +73,7 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      <div class="col-6 float-left p-4" :style="{ height: '100vh', overflow: 'auto' }">
+      <div class="col-12 col-lg-6 float-left p-4 list-holder">
         <RouterView />
       </div>
     </div>
@@ -83,5 +82,27 @@ onMounted(() => {
 </template>
 
 <style scoped>
+
+.playing-info-holder>div {
+  width: 100%;
+}
+
+.list-holder {
+  max-height: 100vh;
+  overflow: auto;
+}
+
+@media screen and (min-width: 1004px) {
+  .playing-info-holder {
+    height: 100vh;
+  }
+}
+
+@media screen and (max-width: 1004px) {
+  .playing-info-holder {
+    padding-bottom: 15px;
+    border-bottom: #777 solid 1px;
+  }
+}
 
 </style>
