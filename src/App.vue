@@ -42,6 +42,13 @@ onMounted(() => {
               .then(d => d.json())
               .then(i => loadVideo(i[0]));
           }
+        },
+        'onStateChange': (data) => {
+          if (data.data === YT.PlayerState.ENDED && playing.value['next']) { 
+            fetch('/data/' + playing.value['next'] + '.json')
+              .then(d => d.json())
+              .then(i => loadVideo(i));
+          }
         }
       }
     });
