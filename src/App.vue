@@ -1,12 +1,12 @@
-<script setup lang="ts">
+<script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import { onMounted, ref } from 'vue'
 import { emitter } from './emitter';
 import VideoInfoSpan from './components/VideoInfoSpan.vue';
 
-emitter.on('newVideo', (i: any) => loadVideo(i));
+emitter.on('newVideo', (i) => loadVideo(i));
 
-function loadVideo(i: any) {
+function loadVideo(i) {
   switch (i['platform']) {
     default:
     case 'yt': {
@@ -21,29 +21,31 @@ function loadVideo(i: any) {
   playing.value = i;
 }
 
-const playing: any = ref([]);
+const playing = ref([]);
 
-let player: any = null;
+let player = null;
 
 onMounted(() => {
-  player = new YT.Player('player', {
-    width: '100%',
-    videoId: '',
-    events: {
-      'onReady': () => { 
-        if (window.location.hash && /^#[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(window.location.hash)) {
-          fetch('/data/' + window.location.hash.substring(1) + '.json')
-            .then(d => d.json())
-            .then(i => loadVideo(i));
-        }
-        else { 
-          fetch('/data/data.json')
-            .then(d => d.json())
-            .then(i => loadVideo(i[0]));
+  window.onYouTubeIframeAPIReady = () => {
+    player = new YT.Player('player', {
+      width: '100%',
+      videoId: '',
+      events: {
+        'onReady': () => {
+          if (window.location.hash && /^#[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(window.location.hash)) {
+            fetch('/data/' + window.location.hash.substring(1) + '.json')
+              .then(d => d.json())
+              .then(i => loadVideo(i));
+          }
+          else {
+            fetch('/data/data.json')
+              .then(d => d.json())
+              .then(i => loadVideo(i[0]));
+          }
         }
       }
-    }
-  });
+    });
+  }
 });
 
 </script>

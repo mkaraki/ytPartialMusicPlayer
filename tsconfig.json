@@ -8,7 +8,8 @@
     },
     "types": [
       "@types/youtube"
-    ]
+    ],
+    "allowJs": true
   },
   "references": [
     {
