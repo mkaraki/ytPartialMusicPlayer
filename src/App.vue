@@ -15,7 +15,7 @@ function loadVideo(i) {
         'startSeconds': i['start'],
         'endSeconds': i['end'],
       });
-      player.playVideo();
+      setTimeout(() => { player.playVideo(); }, 1000);
     };
   }
   playing.value = i;
@@ -26,12 +26,17 @@ const playing = ref([]);
 let player = null;
 
 onMounted(() => {
-  window.onYouTubeIframeAPIReady = () => {
+  function loadYTPlayer() { 
     player = new YT.Player('player', {
       width: '100%',
       videoId: '',
       events: {
         'onReady': () => {
+          setInterval(() => {
+            localStorage.setItem('volume', player.getVolume());
+          }, 5000)
+          player.setVolume(parseInt(localStorage.getItem('volume') ?? '100'));
+
           if (window.location.hash && /^#[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(window.location.hash)) {
             fetch('/data/' + window.location.hash.substring(1) + '.json')
               .then(d => d.json())
@@ -44,15 +49,25 @@ onMounted(() => {
           }
         },
         'onStateChange': (data) => {
-          if (data.data === YT.PlayerState.ENDED && playing.value['next']) { 
-            fetch('/data/' + playing.value['next'] + '.json')
-              .then(d => d.json())
-              .then(i => loadVideo(i));
+          console.log(data)
+          if (data.data === YT.PlayerState.ENDED && playing.value['next']) {
+            data.target.seekTo(0, true);
+            setTimeout(() => {
+              fetch('/data/' + playing.value['next'] + '.json')
+                .then(d => d.json())
+                .then(i => loadVideo(i));
+            }, 500);
           }
         }
       }
     });
   }
+
+
+  if (YT.Player)
+    loadYTPlayer();
+  else
+    window.onYouTubeIframeAPIReady = () => { loadYTPlayer(); }
 });
 
 </script>
