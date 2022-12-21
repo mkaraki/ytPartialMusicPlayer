@@ -19,6 +19,7 @@ function loadVideo(i) {
     };
   }
   playing.value = i;
+  window.location.hash = '#' + i['id'];
 }
 
 const playing = ref([]);
@@ -49,7 +50,6 @@ onMounted(() => {
           }
         },
         'onStateChange': (data) => {
-          console.log(data)
           if (data.data === YT.PlayerState.ENDED && playing.value['next']) {
             data.target.seekTo(0, true);
             setTimeout(() => {
